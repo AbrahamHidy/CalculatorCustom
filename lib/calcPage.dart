@@ -1,4 +1,5 @@
 import 'package:calculator_custom/models/calculation.dart';
+import 'package:calculator_custom/views/accountScreen.dart';
 import 'package:calculator_custom/widgets/buttonTile.dart';
 import 'package:expressions/expressions.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class _CalcPageState extends State<CalcPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
-        backgroundColor: Color(0xff555555),
+        //backgroundColor: Color(0xff555555),
         drawer: Drawer(
           child: ListView(
             children: [
@@ -76,7 +77,21 @@ class _CalcPageState extends State<CalcPage> {
           ),
         ),
         appBar: AppBar(
-          title: Text('Custom Calculator'),
+          backgroundColor: Colors.white,
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AccountScreen()));
+              },
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Icon(Icons.person)),
+            ),
+          ],
+          iconTheme: IconThemeData(color: Colors.black),
+          centerTitle: true,
+          title: Image.asset("assets/images/transparent_logo.png"),
         ),
         body: Container(
           child: Column(
@@ -93,6 +108,7 @@ class _CalcPageState extends State<CalcPage> {
                           calculation,
                           style: TextStyle(
                             color: Colors.blue,
+                            fontSize: 40,
                           ),
                         ),
                       ),
