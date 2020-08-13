@@ -1,4 +1,5 @@
 import 'package:calculator_custom/helpers/FunctionProvider.dart';
+import 'package:calculator_custom/views/signIn.dart';
 import 'package:calculator_custom/views/signUp.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,13 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   bool isLoggedIn = false;
+  bool hasAccount = true;
+
+  void pageSwitch() {
+    setState(() {
+      hasAccount = !hasAccount;
+    });
+  }
 
   @override
   void initState() {
@@ -42,7 +50,9 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
       ),
-      body: isLoggedIn ? null : SignUp(null),
+      body: isLoggedIn
+          ? null
+          : hasAccount ? SignIn(pageSwitch) : SignUp(pageSwitch),
     );
   }
 }

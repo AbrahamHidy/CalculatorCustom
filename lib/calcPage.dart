@@ -31,6 +31,9 @@ class _CalcPageState extends State<CalcPage> {
         } else {
           calculation += lable;
         }
+        print(
+            "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT\nTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT\nTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT" +
+                calculation);
         setState(() {});
       },
       child: ButtonTile(lable),
@@ -145,8 +148,8 @@ class _CalcPageState extends State<CalcPage> {
                     buttonTile('='),
                     buttonTile('0'),
                     buttonTile('.'),
-                    buttonTile('%'),
-                    buttonTile('^'),
+                    buttonTile('('),
+                    buttonTile(')'),
                   ],
                 ),
               ),

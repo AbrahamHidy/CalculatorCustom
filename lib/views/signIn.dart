@@ -3,18 +3,20 @@ import 'package:calculator_custom/helpers/FunctionProvider.dart';
 import 'package:calculator_custom/services/authorizor.dart';
 import 'package:calculator_custom/services/databaser.dart';
 import 'package:calculator_custom/widgets/styles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class SignUp extends StatefulWidget {
+class SignIn extends StatefulWidget {
   final Function pageSwitch;
-  SignUp(this.pageSwitch);
-
+  SignIn(this.pageSwitch);
   @override
-  _SignUpState createState() => _SignUpState();
+  _SignInState createState() => _SignInState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignInState extends State<SignIn> {
   bool isLoading = false;
+  bool error = false;
+  String errorMessage = ' Failed; check your information.';
 
   WidgetProider widgetProvider = new WidgetProider();
   final formKey = GlobalKey<FormState>();
@@ -24,28 +26,38 @@ class _SignUpState extends State<SignUp> {
 
   TextEditingController emailTextControl = new TextEditingController();
   TextEditingController passwordTextControl = new TextEditingController();
-
-  signUp() {
+  QuerySnapshot userInfoSnapshot;
+  signIn() {
     if (formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
       });
-
-      Map<String, String> userInfoMap = {
-        "email": emailTextControl.text.trim(),
-        "password": passwordTextControl.text.trim(),
-      };
-      FunctionProvider.saveUsersEmail(emailTextControl.text.trim());
-
       authorizor
-          .signUpEmailPass(
+          .signInEmailPass(
               emailTextControl.text.trim(), passwordTextControl.text.trim())
           .then((value) {
-        databaser.uploadUserInfo(userInfoMap);
-        FunctionProvider.saveLoggedIn(true);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => CalcPage()));
+        if (value != null) {
+          FunctionProvider.saveLoggedIn(true);
+
+          databaser
+              .getUserWithEmail(emailTextControl.text.trim())
+              .then((value) {
+            userInfoSnapshot = value;
+            FunctionProvider.saveUsersEmail(
+                userInfoSnapshot.documents[0].data['email']);
+            print('${userInfoSnapshot.documents[0].data['email']}' + ', Test');
+          });
+
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => CalcPage()));
+        } else {
+          setState(() {
+            error = true;
+            isLoading = false;
+          });
+        }
       });
+      FunctionProvider.saveUsersEmail(emailTextControl.text.trim());
     }
   }
 
@@ -65,12 +77,12 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Create Account",
+                    Text("Log In${!error ? "" : errorMessage}",
                         style: TextStyle(
                           fontSize: 30,
                         )),
                     Icon(
-                      Icons.format_list_numbered,
+                      Icons.label_important,
                       size: 200,
                     ),
                     Form(
@@ -104,7 +116,7 @@ class _SignUpState extends State<SignUp> {
                       height: 32,
                     ),
                     GestureDetector(
-                      onTap: () => signUp(),
+                      onTap: () => signIn(),
                       child: Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.symmetric(vertical: 20),
@@ -115,7 +127,7 @@ class _SignUpState extends State<SignUp> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Text(
-                          'Sign Up!',
+                          'Log in!',
                           style: widgetProvider.buttonTextStyle(),
                         ),
                       ),
@@ -141,7 +153,7 @@ class _SignUpState extends State<SignUp> {
                                 vertical: 10,
                               ),
                               child: Text(
-                                'Log in',
+                                'Sign Up',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,
