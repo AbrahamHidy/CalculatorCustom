@@ -35,16 +35,19 @@ class _SignUpState extends State<SignUp> {
         "email": emailTextControl.text.trim(),
         "password": passwordTextControl.text.trim(),
       };
-      FunctionProvider.saveUsersEmail(emailTextControl.text.trim());
 
       authorizor
           .signUpEmailPass(
               emailTextControl.text.trim(), passwordTextControl.text.trim())
           .then((value) {
-        databaser.uploadUserInfo(userInfoMap);
-        FunctionProvider.saveLoggedIn(true);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => CalcPage()));
+        if (value != null) {
+          databaser.uploadUserInfo(userInfoMap);
+          FunctionProvider.saveLoggedIn(true);
+          FunctionProvider.saveUsersEmail(emailTextControl.text.trim());
+
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => CalcPage()));
+        }
       });
     }
   }
@@ -88,6 +91,7 @@ class _SignUpState extends State<SignUp> {
                                 widgetProvider.formInputdecoration('Email'),
                           ),
                           TextFormField(
+                            obscureText: true,
                             validator: (val) {
                               return val.isEmpty || val.length < 4
                                   ? 'Please use a valid password, more than 4 characters.'

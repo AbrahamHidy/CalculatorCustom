@@ -1,5 +1,6 @@
 import 'package:calculator_custom/helpers/FunctionProvider.dart';
 import 'package:calculator_custom/views/signIn.dart';
+import 'package:calculator_custom/views/signOut.dart';
 import 'package:calculator_custom/views/signUp.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   void initState() {
+    getLoggedIn();
     super.initState();
   }
 
@@ -51,7 +53,7 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       body: isLoggedIn
-          ? null
+          ? SignOut()
           : hasAccount ? SignIn(pageSwitch) : SignUp(pageSwitch),
     );
   }

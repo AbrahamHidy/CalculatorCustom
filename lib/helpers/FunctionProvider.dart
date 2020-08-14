@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FunctionProvider {
   static String _savedLoggedInKey = 'ISLOGGEDIN';
-  static String _savedUsernameKey = 'USERNAMEKEY';
+  static String _savedUserIDKey = 'USERIDKEY';
   static String _savedEmailKey = 'EMAILKEY';
 
   //Savers
@@ -12,9 +12,9 @@ class FunctionProvider {
     return await preferences.setBool(_savedLoggedInKey, isLoggedIn);
   }
 
-  static Future<bool> saveUsersName(String username) async {
+  static Future<bool> saveUsersId(String userID) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.setString(_savedUsernameKey, username);
+    return await preferences.setString(_savedUserIDKey, userID);
   }
 
   static Future<bool> saveUsersEmail(String email) async {
@@ -29,9 +29,9 @@ class FunctionProvider {
     return preferences.getBool(_savedLoggedInKey);
   }
 
-  static Future<String> getUsersName() async {
+  static Future<String> getUsersId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.getString(_savedUsernameKey);
+    return preferences.getString(_savedUserIDKey);
   }
 
   static Future<String> getUsersEmail() async {

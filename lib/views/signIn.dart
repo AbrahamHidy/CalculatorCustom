@@ -16,7 +16,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   bool isLoading = false;
   bool error = false;
-  String errorMessage = ' Failed; check your information.';
+  String errorMessage = ' Failed. Please check your information.';
 
   WidgetProider widgetProvider = new WidgetProider();
   final formKey = GlobalKey<FormState>();
@@ -100,6 +100,7 @@ class _SignInState extends State<SignIn> {
                                 widgetProvider.formInputdecoration('Email'),
                           ),
                           TextFormField(
+                            obscureText: true,
                             validator: (val) {
                               return val.isEmpty || val.length < 4
                                   ? 'Please use a valid password, more than 4 characters.'
