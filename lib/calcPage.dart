@@ -31,9 +31,6 @@ class _CalcPageState extends State<CalcPage> {
         } else {
           calculation += lable;
         }
-        print(
-            "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT\nTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT\nTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT" +
-                calculation);
         setState(() {});
       },
       child: ButtonTile(lable),
@@ -103,16 +100,13 @@ class _CalcPageState extends State<CalcPage> {
               ListView(
                 shrinkWrap: true,
                 children: [
-                  Container(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Center(
-                        child: Text(
-                          calculation,
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 40,
-                          ),
+                  ListTile(
+                    title: Center(
+                      child: Text(
+                        calculation,
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 40,
                         ),
                       ),
                     ),
