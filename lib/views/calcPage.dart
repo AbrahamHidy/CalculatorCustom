@@ -15,6 +15,7 @@ class _CalcPageState extends State<CalcPage> {
   ContextModel contextModel = new ContextModel();
 
   String calculation = '';
+  bool calculated = false;
   List<Widget> children = [];
   ListView list = new ListView();
 
@@ -51,13 +52,32 @@ class _CalcPageState extends State<CalcPage> {
           saveCalculation();
         } else if (lable == "Clear") {
           calculation = '';
+          calculated = false;
         } else if (lable == '=') {
           expression = parser
               .parse(calculation.replaceAll('(', "*(").replaceAll(')', ')'));
           calculation =
               expression.evaluate(EvaluationType.REAL, contextModel).toString();
+          calculated = true;
+        } else if (lable == '1' ||
+            lable == '2' ||
+            lable == '3' ||
+            lable == '4' ||
+            lable == '5' ||
+            lable == '6' ||
+            lable == '7' ||
+            lable == '8' ||
+            lable == '9' ||
+            lable == '0' ||
+            lable == '.') {
+          if (calculated) {
+            calculation = '';
+            calculated = false;
+          }
+          calculation += lable;
         } else {
           calculation += lable;
+          calculated = false;
         }
         setState(() {});
       },
