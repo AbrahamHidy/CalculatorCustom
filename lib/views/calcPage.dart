@@ -1,10 +1,8 @@
 import 'package:calculator_custom/models/calcSession.dart';
-import 'package:calculator_custom/models/calculation.dart';
 import 'package:calculator_custom/views/accountScreen.dart';
 import 'package:calculator_custom/widgets/buttonTile.dart';
-import 'package:expressions/expressions.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class CalcPage extends StatefulWidget {
   @override
@@ -12,10 +10,11 @@ class CalcPage extends StatefulWidget {
 }
 
 class _CalcPageState extends State<CalcPage> {
-  final evaluator = const ExpressionEvaluator();
-  String calculation = '';
+  final parser = Parser();
   Expression expression;
-  var myContext;
+  ContextModel contextModel = new ContextModel();
+
+  String calculation = '';
   List<Widget> children = [];
   ListView list = new ListView();
 
@@ -53,8 +52,10 @@ class _CalcPageState extends State<CalcPage> {
         } else if (lable == "Clear") {
           calculation = '';
         } else if (lable == '=') {
-          expression = Expression.parse(calculation.replaceAll('%', "*(0.01)"));
-          calculation = evaluator.eval(expression, myContext).toString();
+          expression = parser
+              .parse(calculation.replaceAll('(', "*(").replaceAll(')', ')'));
+          calculation =
+              expression.evaluate(EvaluationType.REAL, contextModel).toString();
         } else {
           calculation += lable;
         }
