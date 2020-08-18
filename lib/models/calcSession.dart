@@ -7,9 +7,10 @@ class CalcSession extends ListView {
   DateTime lastEdited;
   List<Calculation> calculations = new List();
 
-  CalcSession({
-    this.name,
-    this.timecreated,
-    this.lastEdited,
-  }) : super();
+  CalcSession(String name, DateTime timeCreated, DateTime lastEdited)
+      : super() {
+    this.name = name;
+    this.timecreated = timeCreated;
+    this.lastEdited = lastEdited;
+  }
 }

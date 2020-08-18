@@ -1,6 +1,6 @@
-import 'package:calculator_custom/calcPage.dart';
 import 'package:calculator_custom/helpers/FunctionProvider.dart';
 import 'package:calculator_custom/services/authorizor.dart';
+import 'package:calculator_custom/views/calcPage.dart';
 import 'package:calculator_custom/widgets/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -10,12 +10,24 @@ class SignOut extends StatefulWidget {
 }
 
 class _SignOutState extends State<SignOut> {
+  String usersEmail;
   Authorizor authorizor = new Authorizor();
   WidgetProider widgetProvider = new WidgetProider();
   @override
+  void initState() {
+    getUserEmail();
+    super.initState();
+  }
+
+  void getUserEmail() async {
+    usersEmail = await FunctionProvider.getUsersEmail();
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.lightBlue.withAlpha(1000),
+        color: Colors.white,
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -28,6 +40,16 @@ class _SignOutState extends State<SignOut> {
             ),
             SizedBox(
               height: 20,
+            ),
+            Text(
+              usersEmail,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(
+              height: 60,
             ),
             GestureDetector(
               onTap: () => authorizor.signOut().then((value) {

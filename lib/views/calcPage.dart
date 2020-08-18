@@ -1,3 +1,4 @@
+import 'package:calculator_custom/models/calcSession.dart';
 import 'package:calculator_custom/models/calculation.dart';
 import 'package:calculator_custom/views/accountScreen.dart';
 import 'package:calculator_custom/widgets/buttonTile.dart';
@@ -15,14 +16,40 @@ class _CalcPageState extends State<CalcPage> {
   String calculation = '';
   Expression expression;
   var myContext;
-  List<Calculation> calculations = new List();
+  List<Widget> children = [];
+  ListView list = new ListView();
+
+  CalcSession currentCalcSession = new CalcSession(
+    'name',
+    DateTime.now(),
+    DateTime.now(),
+  );
+
+  void saveCalculation() {
+    print("TEST");
+    children.add(
+      ListTile(
+        title: Center(
+          child: Text(
+            calculation,
+            style: TextStyle(
+              color: Colors.blue,
+              fontSize: 40,
+            ),
+          ),
+        ),
+      ),
+    );
+    print(calculation);
+    print(children);
+  }
 
   Widget buttonTile(String lable) {
     return InkWell(
       borderRadius: BorderRadius.all(Radius.circular(100)),
       onTap: () {
         if (lable == 'Save') {
-          //Implement Saving Functionality
+          saveCalculation();
         } else if (lable == "Clear") {
           calculation = '';
         } else if (lable == '=') {
@@ -91,30 +118,37 @@ class _CalcPageState extends State<CalcPage> {
           ],
           iconTheme: IconThemeData(color: Colors.black),
           centerTitle: true,
-          title: Image.asset("assets/images/transparent_logo.png"),
+          title: Text(
+            'Cloud Calc',
+            style:
+                TextStyle(color: Colors.black, fontSize: 28, letterSpacing: 3),
+          ),
         ),
         body: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              ListView(
-                shrinkWrap: true,
-                children: [
-                  ListTile(
-                    title: Center(
-                      child: Text(
-                        calculation,
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 40,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+              Container(
+                height: 130,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: children.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return children[index];
+                  },
+                ),
+              ),
+              Container(
+                child: Text(
+                  calculation,
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 40,
+                  ),
+                ),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               Container(
                 color: Colors.white,

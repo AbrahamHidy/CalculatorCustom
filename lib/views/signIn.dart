@@ -1,7 +1,7 @@
-import 'package:calculator_custom/calcPage.dart';
 import 'package:calculator_custom/helpers/FunctionProvider.dart';
 import 'package:calculator_custom/services/authorizor.dart';
 import 'package:calculator_custom/services/databaser.dart';
+import 'package:calculator_custom/views/calcPage.dart';
 import 'package:calculator_custom/widgets/styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   bool isLoading = false;
   bool error = false;
-  String errorMessage = ' Failed. Please check your information.';
+  String errorMessage = ' failed. Please check your information.';
 
   WidgetProider widgetProvider = new WidgetProider();
   final formKey = GlobalKey<FormState>();

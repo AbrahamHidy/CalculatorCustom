@@ -1,7 +1,7 @@
-import 'package:calculator_custom/calcPage.dart';
 import 'package:calculator_custom/helpers/FunctionProvider.dart';
 import 'package:calculator_custom/services/authorizor.dart';
 import 'package:calculator_custom/services/databaser.dart';
+import 'package:calculator_custom/views/calcPage.dart';
 import 'package:calculator_custom/widgets/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +15,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool isLoading = false;
+  bool error = false;
+  String errorMessage = '\nPlease ensure the requirements are met.';
 
   WidgetProider widgetProvider = new WidgetProider();
   final formKey = GlobalKey<FormState>();
@@ -47,6 +49,11 @@ class _SignUpState extends State<SignUp> {
 
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => CalcPage()));
+        } else {
+          setState(() {
+            error = true;
+            isLoading = false;
+          });
         }
       });
     }
@@ -68,7 +75,7 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Create Account",
+                    Text("Create Account${!error ? "" : errorMessage}",
                         style: TextStyle(
                           fontSize: 30,
                         )),

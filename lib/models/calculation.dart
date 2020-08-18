@@ -6,6 +6,10 @@ class Calculation extends ListTile {
   Color color;
   DateTime timeCreated;
 
-  Calculation({this.name, this.content, this.color, this.timeCreated})
-      : super();
+  Calculation({
+    this.name,
+    this.content,
+    this.color,
+    this.timeCreated,
+  }) : super();
 }
