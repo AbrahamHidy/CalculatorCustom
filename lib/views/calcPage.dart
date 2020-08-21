@@ -26,7 +26,6 @@ class _CalcPageState extends State<CalcPage> {
   );
 
   void saveCalculation() {
-    print("TEST");
     children.add(
       ListTile(
         title: Center(
@@ -40,8 +39,6 @@ class _CalcPageState extends State<CalcPage> {
         ),
       ),
     );
-    print(calculation);
-    print(children);
   }
 
   Widget buttonTile(String lable) {
@@ -88,92 +85,97 @@ class _CalcPageState extends State<CalcPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        //backgroundColor: Color(0xff555555),
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              ListTile(
-                title: Text(
-                  "Saved Calculations",
-                  style: TextStyle(fontSize: 30, color: Colors.blue),
-                ),
-                focusColor: Colors.blue,
+      resizeToAvoidBottomPadding: false,
+      //backgroundColor: Color(0xff555555),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              title: Text(
+                "Saved Calculations",
+                style: TextStyle(fontSize: 30, color: Colors.blue),
               ),
-              ListTile(
-                title: Text(
-                  "Test 1",
-                  style: TextStyle(fontSize: 20),
-                ),
-                focusColor: Colors.blue,
+              focusColor: Colors.blue,
+            ),
+            ListTile(
+              title: Text(
+                "Test 1",
+                style: TextStyle(fontSize: 20),
               ),
-              ListTile(
-                title: Text(
-                  "Test 2",
-                  style: TextStyle(fontSize: 20),
-                ),
-                hoverColor: Colors.blue,
+              focusColor: Colors.blue,
+            ),
+            ListTile(
+              title: Text(
+                "Test 2",
+                style: TextStyle(fontSize: 20),
               ),
-              ListTile(
-                title: Text(
-                  "Test 3",
-                  style: TextStyle(fontSize: 20),
-                ),
-                focusColor: Colors.blue,
+              hoverColor: Colors.blue,
+            ),
+            ListTile(
+              title: Text(
+                "Test 3",
+                style: TextStyle(fontSize: 20),
               ),
-            ],
-          ),
-        ),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AccountScreen()));
-              },
-              child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Icon(Icons.person)),
+              focusColor: Colors.blue,
             ),
           ],
-          iconTheme: IconThemeData(color: Colors.black),
-          centerTitle: true,
-          title: Text(
-            'Cloud Calc',
-            style:
-                TextStyle(color: Colors.black, fontSize: 28, letterSpacing: 3),
-          ),
         ),
-        body: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                height: 130,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: children.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return children[index];
-                  },
-                ),
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AccountScreen()));
+            },
+            child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Icon(Icons.person)),
+          ),
+        ],
+        iconTheme: IconThemeData(color: Colors.black),
+        centerTitle: true,
+        title: Text(
+          'Cloud Calc',
+          style: TextStyle(color: Colors.black, fontSize: 28, letterSpacing: 3),
+        ),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.amber,
+              height: 130,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: children.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return children[index];
+                },
               ),
-              Container(
-                child: Text(
-                  calculation,
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 40,
-                  ),
-                ),
+            ),
+          ),
+          Container(
+            color: Colors.lightGreen,
+            child: Text(
+              calculation,
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 40,
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                color: Colors.white,
-                padding: EdgeInsets.all(8),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return Container(
+                color: Colors.yellow,
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 //alignment: Alignment.bottomCenter,
                 child: GridView.count(
                   shrinkWrap: true,
@@ -183,17 +185,17 @@ class _CalcPageState extends State<CalcPage> {
                     buttonTile('-'),
                     buttonTile('*'),
                     buttonTile('/'),
-                    buttonTile('1'),
-                    buttonTile('2'),
-                    buttonTile('3'),
+                    buttonTile('7'),
+                    buttonTile('8'),
+                    buttonTile('9'),
                     buttonTile('Save'),
                     buttonTile('4'),
                     buttonTile('5'),
                     buttonTile('6'),
                     buttonTile('Clear'),
-                    buttonTile('7'),
-                    buttonTile('8'),
-                    buttonTile('9'),
+                    buttonTile('1'),
+                    buttonTile('2'),
+                    buttonTile('3'),
                     buttonTile('='),
                     buttonTile('0'),
                     buttonTile('.'),
@@ -201,9 +203,11 @@ class _CalcPageState extends State<CalcPage> {
                     buttonTile(')'),
                   ],
                 ),
-              ),
-            ],
+              );
+            },
           ),
-        ));
+        ],
+      ),
+    );
   }
 }

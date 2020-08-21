@@ -14,9 +14,11 @@ class ButtonTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: label == 'Clear'
               ? Colors.cyan
-              : (int.tryParse(label) == null)
-                  ? Colors.green
-                  : Color(0xff1CA7FF),
+              : label == 'Save'
+                  ? Colors.blue
+                  : (int.tryParse(label) == null)
+                      ? Colors.green
+                      : Color(0xff1CA7FF),
           borderRadius: BorderRadius.circular(100),
         ),
         child: Center(
