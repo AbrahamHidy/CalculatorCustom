@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:calculator_custom/helpers/numberFormatter.dart';
 import 'package:calculator_custom/models/calcLogger.dart';
 import 'package:calculator_custom/models/calcSession.dart';
@@ -162,8 +163,12 @@ class _CalcPageState extends State<CalcPage> {
             ),
           ),
           Container(
-            child: Text(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            //height: 45,
+            child: AutoSizeText(
               calculation,
+              maxLines: 1,
+              //maxFontSize: 40,
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 40,
