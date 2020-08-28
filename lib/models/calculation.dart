@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
-class Calculation extends ListTile {
-  String name;
-  String content;
+class Calculation {
+  String _result;
+  String _expression;
   Color color;
-  DateTime timeCreated;
+  DateTime timeCreated = DateTime.now();
 
-  Calculation({
-    this.name,
-    this.content,
-    this.color,
-    this.timeCreated,
-  }) : super();
+  Calculation(this._result, this._expression);
+
+  String getResult() {
+    return this._result;
+  }
+
+  String getExpression() {
+    return this._expression;
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:calculator_custom/models/calculation.dart';
 import 'package:flutter/material.dart';
 
+// Can be remover; replaced by calcLogger.
+
 class CalcSession extends ListView {
   String name;
   DateTime timecreated;

@@ -1,4 +1,6 @@
+import 'package:calculator_custom/models/calcLogger.dart';
 import 'package:calculator_custom/models/calcSession.dart';
+import 'package:calculator_custom/models/calculation.dart';
 import 'package:calculator_custom/views/accountScreen.dart';
 import 'package:calculator_custom/widgets/buttonTile.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +15,11 @@ class _CalcPageState extends State<CalcPage> {
   final parser = Parser();
   Expression expression;
   ContextModel contextModel = new ContextModel();
+  CalcLogger logger = new CalcLogger();
 
   String calculation = '';
+  String userInput = '';
   bool calculated = false;
-  List<Widget> children = [];
-  ListView list = new ListView();
 
   CalcSession currentCalcSession = new CalcSession(
     'name',
@@ -25,34 +27,20 @@ class _CalcPageState extends State<CalcPage> {
     DateTime.now(),
   );
 
-  void saveCalculation() {
-    children.add(
-      ListTile(
-        title: Center(
-          child: Text(
-            calculation,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 40,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buttonTile(String lable) {
+  Widget button(String lable) {
     return InkWell(
       borderRadius: BorderRadius.all(Radius.circular(100)),
       onTap: () {
         if (lable == 'Save') {
-          saveCalculation();
+          logger.saveCalculation(Calculation(calculation, userInput));
         } else if (lable == "Clear") {
           calculation = '';
+          userInput = '';
           calculated = false;
         } else if (lable == '=') {
           expression = parser
               .parse(calculation.replaceAll('(', "*(").replaceAll(')', ')'));
+          userInput = calculation;
           calculation =
               expression.evaluate(EvaluationType.REAL, contextModel).toString();
           calculated = true;
@@ -150,16 +138,16 @@ class _CalcPageState extends State<CalcPage> {
               color: Colors.amber,
               height: 130,
               child: ListView.builder(
+                reverse: true,
                 shrinkWrap: true,
-                itemCount: children.length,
+                itemCount: logger.getLength(),
                 itemBuilder: (BuildContext context, int index) {
-                  return children[index];
+                  return logger.getLoggedCalcs()[index];
                 },
               ),
             ),
           ),
           Container(
-            color: Colors.lightGreen,
             child: Text(
               calculation,
               style: TextStyle(
@@ -181,26 +169,26 @@ class _CalcPageState extends State<CalcPage> {
                   shrinkWrap: true,
                   crossAxisCount: 4,
                   children: [
-                    buttonTile('+'),
-                    buttonTile('-'),
-                    buttonTile('*'),
-                    buttonTile('/'),
-                    buttonTile('7'),
-                    buttonTile('8'),
-                    buttonTile('9'),
-                    buttonTile('Save'),
-                    buttonTile('4'),
-                    buttonTile('5'),
-                    buttonTile('6'),
-                    buttonTile('Clear'),
-                    buttonTile('1'),
-                    buttonTile('2'),
-                    buttonTile('3'),
-                    buttonTile('='),
-                    buttonTile('0'),
-                    buttonTile('.'),
-                    buttonTile('('),
-                    buttonTile(')'),
+                    button('+'),
+                    button('-'),
+                    button('*'),
+                    button('/'),
+                    button('7'),
+                    button('8'),
+                    button('9'),
+                    button('Save'),
+                    button('4'),
+                    button('5'),
+                    button('6'),
+                    button('Clear'),
+                    button('1'),
+                    button('2'),
+                    button('3'),
+                    button('='),
+                    button('0'),
+                    button('.'),
+                    button('('),
+                    button(')'),
                   ],
                 ),
               );
