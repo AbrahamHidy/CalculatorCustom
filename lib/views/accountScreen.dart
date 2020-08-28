@@ -31,7 +31,7 @@ class _AccountScreenState extends State<AccountScreen> {
         if (value != null) {
           isLoggedIn = value;
         } else {
-          isLoggedIn = value;
+          isLoggedIn = false;
         }
       });
     });
