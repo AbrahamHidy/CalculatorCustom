@@ -15,11 +15,16 @@ class _CalcPageState extends State<CalcPage> {
   final parser = Parser();
   Expression expression;
   ContextModel contextModel = new ContextModel();
-  CalcLogger logger = new CalcLogger();
+
+  CalcLogger logger;
 
   String calculation = '';
   String userInput = '';
   bool calculated = false;
+
+  refresh() {
+    setState(() {});
+  }
 
   CalcSession currentCalcSession = new CalcSession(
     'name',
@@ -68,6 +73,12 @@ class _CalcPageState extends State<CalcPage> {
       },
       child: ButtonTile(lable),
     );
+  }
+
+  @override
+  void initState() {
+    logger = new CalcLogger(notifyParent: refresh);
+    super.initState();
   }
 
   @override

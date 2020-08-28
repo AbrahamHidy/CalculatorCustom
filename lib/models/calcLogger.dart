@@ -4,9 +4,16 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CalcLogger {
   List<Widget> _savedCalcs = [];
+  List<Calculation> _calcsForReference = [];
   DateTime _timeCreated = DateTime.now();
+  State _calcPageState;
+
+  final Function notifyParent;
+
+  CalcLogger({Key key, @required this.notifyParent});
 
   void saveCalculation(Calculation calcToSave) {
+    _calcsForReference.insert(0, calcToSave);
     _savedCalcs.insert(
       0,
       Slidable(
@@ -35,7 +42,12 @@ class CalcLogger {
             caption: 'Delete',
             color: Colors.red,
             icon: Icons.delete,
-            onTap: () => null, // IMPLEMENT info pane
+            onTap: () {
+              int indexToDelete = _calcsForReference.indexOf(calcToSave);
+              _savedCalcs.removeAt(indexToDelete);
+              _calcsForReference.removeAt(indexToDelete);
+              notifyParent();
+            },
           ),
         ],
       ),
@@ -49,4 +61,6 @@ class CalcLogger {
   List<Widget> getLoggedCalcs() {
     return _savedCalcs;
   }
+
+  void deleteCalculation() {}
 }
