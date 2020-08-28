@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FunctionProvider {
+class PreferenceSaver {
   static String _savedLoggedInKey = 'ISLOGGEDIN';
   static String _savedUserIDKey = 'USERIDKEY';
   static String _savedEmailKey = 'EMAILKEY';

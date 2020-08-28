@@ -1,4 +1,4 @@
-import 'package:calculator_custom/helpers/FunctionProvider.dart';
+import 'package:calculator_custom/helpers/functionProvider.dart';
 import 'package:calculator_custom/views/signIn.dart';
 import 'package:calculator_custom/views/signOut.dart';
 import 'package:calculator_custom/views/signUp.dart';
@@ -12,6 +12,7 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   bool isLoggedIn = false;
   bool hasAccount = true;
+  bool isLoading = true;
 
   void pageSwitch() {
     setState(() {
@@ -21,12 +22,13 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   void initState() {
-    getLoggedIn();
     super.initState();
+    getLoggedIn();
+    isLoading = false;
   }
 
   void getLoggedIn() async {
-    await FunctionProvider.getLoggedIn().then((value) {
+    await PreferenceSaver.getLoggedIn().then((value) {
       setState(() {
         if (value != null) {
           isLoggedIn = value;
@@ -39,22 +41,26 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        centerTitle: false,
-        title: Text(
-          'Account',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-          ),
-        ),
-      ),
-      body: isLoggedIn
-          ? SignOut()
-          : hasAccount ? SignIn(pageSwitch) : SignUp(pageSwitch),
-    );
+    return isLoading
+        ? Container(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              iconTheme: IconThemeData(color: Colors.black),
+              centerTitle: false,
+              title: Text(
+                'Account',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            body: isLoggedIn
+                ? SignOut()
+                : hasAccount ? SignIn(pageSwitch) : SignUp(pageSwitch),
+          );
   }
 }

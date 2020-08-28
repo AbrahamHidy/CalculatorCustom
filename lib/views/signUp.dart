@@ -1,4 +1,4 @@
-import 'package:calculator_custom/helpers/FunctionProvider.dart';
+import 'package:calculator_custom/helpers/functionProvider.dart';
 import 'package:calculator_custom/services/authorizor.dart';
 import 'package:calculator_custom/services/databaser.dart';
 import 'package:calculator_custom/views/calcPage.dart';
@@ -35,7 +35,6 @@ class _SignUpState extends State<SignUp> {
 
       Map<String, String> userInfoMap = {
         "email": emailTextControl.text.trim(),
-        "password": passwordTextControl.text.trim(),
       };
 
       authorizor
@@ -44,8 +43,8 @@ class _SignUpState extends State<SignUp> {
           .then((value) {
         if (value != null) {
           databaser.uploadUserInfo(userInfoMap);
-          FunctionProvider.saveLoggedIn(true);
-          FunctionProvider.saveUsersEmail(emailTextControl.text.trim());
+          PreferenceSaver.saveLoggedIn(true);
+          PreferenceSaver.saveUsersEmail(emailTextControl.text.trim());
 
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => CalcPage()));

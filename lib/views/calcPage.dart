@@ -1,3 +1,4 @@
+import 'package:calculator_custom/helpers/numberFormatter.dart';
 import 'package:calculator_custom/models/calcLogger.dart';
 import 'package:calculator_custom/models/calcSession.dart';
 import 'package:calculator_custom/models/calculation.dart';
@@ -46,8 +47,9 @@ class _CalcPageState extends State<CalcPage> {
           expression = parser
               .parse(calculation.replaceAll('(', "*(").replaceAll(')', ')'));
           userInput = calculation;
-          calculation =
-              expression.evaluate(EvaluationType.REAL, contextModel).toString();
+          double result =
+              expression.evaluate(EvaluationType.REAL, contextModel);
+          calculation = NumberFormatter.format(result);
           calculated = true;
         } else if (lable == '1' ||
             lable == '2' ||
@@ -85,7 +87,7 @@ class _CalcPageState extends State<CalcPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      //backgroundColor: Color(0xff555555),
+      backgroundColor: Colors.white, //Color(0xff555555),
       drawer: Drawer(
         child: ListView(
           children: [
@@ -122,6 +124,7 @@ class _CalcPageState extends State<CalcPage> {
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0.0,
         actions: [
           GestureDetector(
             onTap: () {
@@ -146,7 +149,7 @@ class _CalcPageState extends State<CalcPage> {
         children: [
           Expanded(
             child: Container(
-              color: Colors.amber,
+              color: Colors.white,
               height: 130,
               child: ListView.builder(
                 reverse: true,
@@ -173,8 +176,8 @@ class _CalcPageState extends State<CalcPage> {
           LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               return Container(
-                color: Colors.yellow,
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                 //alignment: Alignment.bottomCenter,
                 child: GridView.count(
                   shrinkWrap: true,

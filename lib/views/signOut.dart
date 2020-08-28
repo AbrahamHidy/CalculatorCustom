@@ -1,4 +1,4 @@
-import 'package:calculator_custom/helpers/FunctionProvider.dart';
+import 'package:calculator_custom/helpers/functionProvider.dart';
 import 'package:calculator_custom/services/authorizor.dart';
 import 'package:calculator_custom/views/calcPage.dart';
 import 'package:calculator_custom/widgets/styles.dart';
@@ -10,7 +10,7 @@ class SignOut extends StatefulWidget {
 }
 
 class _SignOutState extends State<SignOut> {
-  String usersEmail;
+  String usersEmail = '';
   Authorizor authorizor = new Authorizor();
   WidgetProider widgetProvider = new WidgetProider();
   @override
@@ -20,7 +20,14 @@ class _SignOutState extends State<SignOut> {
   }
 
   void getUserEmail() async {
-    usersEmail = await FunctionProvider.getUsersEmail();
+    await PreferenceSaver.getUsersEmail().then((value) {
+      if (value != null) {
+        usersEmail = value;
+      } else {
+        usersEmail = '';
+      }
+    });
+
     setState(() {});
   }
 
@@ -53,7 +60,7 @@ class _SignOutState extends State<SignOut> {
             ),
             GestureDetector(
               onTap: () => authorizor.signOut().then((value) {
-                FunctionProvider.saveLoggedIn(false);
+                PreferenceSaver.saveLoggedIn(false);
 
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => CalcPage()));

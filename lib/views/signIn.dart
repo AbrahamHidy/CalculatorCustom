@@ -1,4 +1,4 @@
-import 'package:calculator_custom/helpers/FunctionProvider.dart';
+import 'package:calculator_custom/helpers/functionProvider.dart';
 import 'package:calculator_custom/services/authorizor.dart';
 import 'package:calculator_custom/services/databaser.dart';
 import 'package:calculator_custom/views/calcPage.dart';
@@ -37,13 +37,13 @@ class _SignInState extends State<SignIn> {
               emailTextControl.text.trim(), passwordTextControl.text.trim())
           .then((value) {
         if (value != null) {
-          FunctionProvider.saveLoggedIn(true);
+          PreferenceSaver.saveLoggedIn(true);
 
           databaser
               .getUserWithEmail(emailTextControl.text.trim())
               .then((value) {
             userInfoSnapshot = value;
-            FunctionProvider.saveUsersEmail(
+            PreferenceSaver.saveUsersEmail(
                 userInfoSnapshot.documents[0].data['email']);
             print('${userInfoSnapshot.documents[0].data['email']}' + ', Test');
           });
@@ -57,7 +57,7 @@ class _SignInState extends State<SignIn> {
           });
         }
       });
-      FunctionProvider.saveUsersEmail(emailTextControl.text.trim());
+      PreferenceSaver.saveUsersEmail(emailTextControl.text.trim());
     }
   }
 
