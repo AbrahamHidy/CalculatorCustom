@@ -1,10 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:calculator_custom/helpers/numberFormatter.dart';
 import 'package:calculator_custom/models/calcLogger.dart';
-import 'package:calculator_custom/models/calcSession.dart';
 import 'package:calculator_custom/models/calculation.dart';
+import 'package:calculator_custom/services/databaser.dart';
 import 'package:calculator_custom/views/accountScreen.dart';
 import 'package:calculator_custom/widgets/buttonTile.dart';
+import 'package:calculator_custom/widgets/drawerItem.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -18,6 +19,8 @@ class _CalcPageState extends State<CalcPage> {
   Expression expression;
   ContextModel contextModel = new ContextModel();
 
+  Databaser databaser = new Databaser();
+
   CalcLogger logger;
 
   String calculation = '';
@@ -27,12 +30,6 @@ class _CalcPageState extends State<CalcPage> {
   refresh() {
     setState(() {});
   }
-
-  CalcSession currentCalcSession = new CalcSession(
-    'name',
-    DateTime.now(),
-    DateTime.now(),
-  );
 
   Widget button(String lable) {
     return InkWell(
@@ -99,27 +96,9 @@ class _CalcPageState extends State<CalcPage> {
               ),
               focusColor: Colors.blue,
             ),
-            ListTile(
-              title: Text(
-                "Test 1",
-                style: TextStyle(fontSize: 20),
-              ),
-              focusColor: Colors.blue,
-            ),
-            ListTile(
-              title: Text(
-                "Test 2",
-                style: TextStyle(fontSize: 20),
-              ),
-              hoverColor: Colors.blue,
-            ),
-            ListTile(
-              title: Text(
-                "Test 3",
-                style: TextStyle(fontSize: 20),
-              ),
-              focusColor: Colors.blue,
-            ),
+            DrawerItem(),
+            DrawerItem(),
+            DrawerItem(),
           ],
         ),
       ),
@@ -132,16 +111,32 @@ class _CalcPageState extends State<CalcPage> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AccountScreen()));
             },
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Icon(Icons.person)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      color: Colors.grey.withAlpha(400),
+                      borderRadius: BorderRadius.circular(20)),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.blue,
+                  )),
+            ),
           ),
         ],
         iconTheme: IconThemeData(color: Colors.black),
         centerTitle: true,
-        title: Text(
-          'Cloud Calc',
-          style: TextStyle(color: Colors.black, fontSize: 28, letterSpacing: 3),
+        title: GestureDetector(
+          onTap: () {
+            databaser.uploadCalculation(logger);
+          },
+          child: Text(
+            'Cloud Calc',
+            style:
+                TextStyle(color: Colors.black, fontSize: 28, letterSpacing: 3),
+          ),
         ),
       ),
       body: Column(

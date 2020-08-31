@@ -5,9 +5,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class CalcLogger {
   List<Widget> _savedCalcs = [];
   List<Calculation> _calcsForReference = [];
-  DateTime _timeCreated = DateTime.now();
-  State _calcPageState;
-
+  String _name;
+  String _id;
+  DateTime timeCreated = DateTime.now();
   final Function notifyParent;
 
   CalcLogger({Key key, @required this.notifyParent});
@@ -60,6 +60,18 @@ class CalcLogger {
 
   List<Widget> getLoggedCalcs() {
     return _savedCalcs;
+  }
+
+  Map<String, String> toMap() {
+    return {'test': "jfds;lk"};
+  }
+
+  String getName() {
+    return _name;
+  }
+
+  String getId() {
+    return _id;
   }
 
   void deleteCalculation() {}
