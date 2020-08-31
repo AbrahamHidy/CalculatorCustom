@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CalcLogger {
-  List<Widget> _savedCalcs = [];
+  List<Widget> _savedCalcTiles = [];
   List<Calculation> _calcsForReference = [];
   String _name;
   String _id;
@@ -14,17 +14,17 @@ class CalcLogger {
 
   void saveCalculation(Calculation calcToSave) {
     _calcsForReference.insert(0, calcToSave);
-    _savedCalcs.insert(
+    _savedCalcTiles.insert(
       0,
       Slidable(
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.25,
         child: Container(
-          color: Colors.white,
+          color: Colors.grey.withAlpha(300),
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.indigoAccent,
-              child: Text((_savedCalcs.length + 1).toString()),
+              child: Text((_savedCalcTiles.length + 1).toString()),
               foregroundColor: Colors.white,
             ),
             title: Text(calcToSave.getResult()),
@@ -44,7 +44,7 @@ class CalcLogger {
             icon: Icons.delete,
             onTap: () {
               int indexToDelete = _calcsForReference.indexOf(calcToSave);
-              _savedCalcs.removeAt(indexToDelete);
+              _savedCalcTiles.removeAt(indexToDelete);
               _calcsForReference.removeAt(indexToDelete);
               notifyParent();
             },
@@ -55,15 +55,30 @@ class CalcLogger {
   }
 
   int getLength() {
-    return _savedCalcs.length;
+    return _savedCalcTiles.length;
   }
 
   List<Widget> getLoggedCalcs() {
-    return _savedCalcs;
+    return _savedCalcTiles;
   }
 
-  Map<String, String> toMap() {
-    return {'test': "jfds;lk"};
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> toRet = {
+      "name": _name,
+      "id": _id,
+      "timeCreated": timeCreated,
+    };
+    List<Map<String, dynamic>> calcArr = [];
+    for (int i = 0; i < _calcsForReference.length; i++) {
+      Map<String, dynamic> calculationMap = {
+        "result $i": _calcsForReference[i].getResult(),
+        "expression $i": _calcsForReference[i].getExpression(),
+        "timeCreated $i": _calcsForReference[i].timeCreated,
+      };
+      calcArr.add(calculationMap);
+    }
+    toRet.addAll({"calculations": calcArr});
+    return toRet;
   }
 
   String getName() {

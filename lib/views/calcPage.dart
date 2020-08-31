@@ -83,132 +83,134 @@ class _CalcPageState extends State<CalcPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.white, //Color(0xff555555),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text(
-                "Saved Calculations",
-                style: TextStyle(fontSize: 30, color: Colors.blue),
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        backgroundColor: Colors.white, //Color(0xff555555),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              ListTile(
+                title: Text(
+                  "Saved Calculations",
+                  style: TextStyle(fontSize: 30, color: Colors.blue),
+                ),
+                focusColor: Colors.blue,
               ),
-              focusColor: Colors.blue,
+              DrawerItem(),
+              DrawerItem(),
+              DrawerItem(),
+            ],
+          ),
+        ),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AccountScreen()));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(),
+                        color: Colors.grey.withAlpha(400),
+                        borderRadius: BorderRadius.circular(20)),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.blue,
+                    )),
+              ),
             ),
-            DrawerItem(),
-            DrawerItem(),
-            DrawerItem(),
+          ],
+          iconTheme: IconThemeData(color: Colors.black),
+          centerTitle: true,
+          title: GestureDetector(
+            onTap: () {
+              databaser.uploadCalculation(logger);
+            },
+            child: Text(
+              'Cloud Calc',
+              style: TextStyle(
+                  color: Colors.black, fontSize: 28, letterSpacing: 3),
+            ),
+          ),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                height: 130,
+                child: ListView.builder(
+                  reverse: true,
+                  shrinkWrap: true,
+                  itemCount: logger.getLength(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return logger.getLoggedCalcs()[index];
+                  },
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              //height: 45,
+              child: AutoSizeText(
+                calculation,
+                maxLines: 1,
+                //maxFontSize: 40,
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 40,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                  //alignment: Alignment.bottomCenter,
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 4,
+                    children: [
+                      button('+'),
+                      button('-'),
+                      button('*'),
+                      button('/'),
+                      button('7'),
+                      button('8'),
+                      button('9'),
+                      button('Save'),
+                      button('4'),
+                      button('5'),
+                      button('6'),
+                      button('Clear'),
+                      button('1'),
+                      button('2'),
+                      button('3'),
+                      button('='),
+                      button('0'),
+                      button('.'),
+                      button('('),
+                      button(')'),
+                    ],
+                  ),
+                );
+              },
+            ),
           ],
         ),
-      ),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AccountScreen()));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(),
-                      color: Colors.grey.withAlpha(400),
-                      borderRadius: BorderRadius.circular(20)),
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.blue,
-                  )),
-            ),
-          ),
-        ],
-        iconTheme: IconThemeData(color: Colors.black),
-        centerTitle: true,
-        title: GestureDetector(
-          onTap: () {
-            databaser.uploadCalculation(logger);
-          },
-          child: Text(
-            'Cloud Calc',
-            style:
-                TextStyle(color: Colors.black, fontSize: 28, letterSpacing: 3),
-          ),
-        ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: Container(
-              color: Colors.white,
-              height: 130,
-              child: ListView.builder(
-                reverse: true,
-                shrinkWrap: true,
-                itemCount: logger.getLength(),
-                itemBuilder: (BuildContext context, int index) {
-                  return logger.getLoggedCalcs()[index];
-                },
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            //height: 45,
-            child: AutoSizeText(
-              calculation,
-              maxLines: 1,
-              //maxFontSize: 40,
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 40,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              return Container(
-                color: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-                //alignment: Alignment.bottomCenter,
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 4,
-                  children: [
-                    button('+'),
-                    button('-'),
-                    button('*'),
-                    button('/'),
-                    button('7'),
-                    button('8'),
-                    button('9'),
-                    button('Save'),
-                    button('4'),
-                    button('5'),
-                    button('6'),
-                    button('Clear'),
-                    button('1'),
-                    button('2'),
-                    button('3'),
-                    button('='),
-                    button('0'),
-                    button('.'),
-                    button('('),
-                    button(')'),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
       ),
     );
   }

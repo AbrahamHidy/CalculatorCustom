@@ -24,7 +24,7 @@ class Databaser {
   }
 
   uploadCalculation(CalcLogger logger) {
-    if (logger.getName() != null) {
+    if (logger.getId() != null) {
       Firestore.instance
           .collection("calcSessions")
           .document(logger.getId())
