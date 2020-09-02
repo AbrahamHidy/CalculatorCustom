@@ -21,6 +21,7 @@ class _CalcPageState extends State<CalcPage> {
   final parser = Parser();
   Expression expression;
   ContextModel contextModel = new ContextModel();
+  TextEditingController nameTextController = new TextEditingController();
 
   Databaser databaser = new Databaser();
   CalcLogger logger;
@@ -160,12 +161,18 @@ class _CalcPageState extends State<CalcPage> {
                             content: Column(
                               children: [
                                 TextField(
+                                  controller: nameTextController,
                                   decoration: widgetProider
                                       .formInputdecoration('Session name'),
                                 ),
                                 InkResponse(
                                   onTap: () {
+                                    if (nameTextController.text != '') {
+                                      logger.setName(
+                                          nameTextController.text.trim());
+                                    }
                                     Navigator.of(context).pop();
+                                    setState(() {});
                                   },
                                   child: CircleAvatar(
                                     child: Icon(Icons.close),
@@ -197,14 +204,18 @@ class _CalcPageState extends State<CalcPage> {
                           child: Text("Upload to cloud"),
                           isDefaultAction: true,
                           onPressed: () {
-                            print("Action 1 is been clicked");
+                            databaser.uploadCalculation(logger);
+                            Navigator.pop(context);
                           },
                         ),
                         CupertinoActionSheetAction(
                           child: Text("Delete session"),
                           isDestructiveAction: true,
                           onPressed: () {
-                            print("Action 2 is been clicked");
+                            Navigator.pop(context);
+                            setState(() {
+                              logger = new CalcLogger(notifyParent: refresh);
+                            });
                           },
                         )
                       ],

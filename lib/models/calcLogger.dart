@@ -54,6 +54,10 @@ class CalcLogger {
     );
   }
 
+  void setName(String name) {
+    _name = name;
+  }
+
   int getLength() {
     return _savedCalcTiles.length;
   }
