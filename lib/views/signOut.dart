@@ -24,7 +24,7 @@ class _SignOutState extends State<SignOut> {
       if (value != null) {
         usersEmail = value;
       } else {
-        usersEmail = '';
+        usersEmail = 'null';
       }
     });
 

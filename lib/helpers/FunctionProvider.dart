@@ -22,6 +22,11 @@ class PreferenceSaver {
     return await preferences.setString(_savedEmailKey, email);
   }
 
+  static Future<bool> reset() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.clear();
+  }
+
   //Retrievers
 
   static Future<bool> getLoggedIn() async {

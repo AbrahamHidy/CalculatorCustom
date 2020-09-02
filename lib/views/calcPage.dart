@@ -7,6 +7,8 @@ import 'package:calculator_custom/services/databaser.dart';
 import 'package:calculator_custom/views/accountScreen.dart';
 import 'package:calculator_custom/widgets/buttonTile.dart';
 import 'package:calculator_custom/widgets/drawerItem.dart';
+import 'package:calculator_custom/widgets/styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -27,6 +29,7 @@ class _CalcPageState extends State<CalcPage> {
   String calculation = '';
   String userInput = '';
   bool calculated = false;
+  WidgetProider widgetProider = new WidgetProider();
 
   refresh() {
     setState(() {});
@@ -147,13 +150,78 @@ class _CalcPageState extends State<CalcPage> {
           ],
           iconTheme: IconThemeData(color: Colors.black),
           centerTitle: true,
-          title: DropdownButton(items: [
-            DropdownMenuItem(
-              child: GestureDetector(
-                  onTap: () => databaser.uploadCalculation(logger),
-                  child: Text('Upload')),
-            )
-          ], onChanged: null),
+          title: OutlineButton(
+            onPressed: logger.getName() == null
+                ? () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Column(
+                              children: [
+                                TextField(
+                                  decoration: widgetProider
+                                      .formInputdecoration('Session name'),
+                                ),
+                                InkResponse(
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: CircleAvatar(
+                                    child: Icon(Icons.close),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                  }
+                : () {
+                    final action = CupertinoActionSheet(
+                      title: logger.getName() == null
+                          ? Text(
+                              'Unnamed Session',
+                              style: TextStyle(fontSize: 30),
+                            )
+                          : Text(
+                              logger.getName(),
+                              style: TextStyle(fontSize: 30),
+                            ),
+                      message: Text(
+                        "Select any action ",
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      actions: <Widget>[
+                        CupertinoActionSheetAction(
+                          child: Text("Upload to cloud"),
+                          isDefaultAction: true,
+                          onPressed: () {
+                            print("Action 1 is been clicked");
+                          },
+                        ),
+                        CupertinoActionSheetAction(
+                          child: Text("Delete session"),
+                          isDestructiveAction: true,
+                          onPressed: () {
+                            print("Action 2 is been clicked");
+                          },
+                        )
+                      ],
+                      cancelButton: CupertinoActionSheetAction(
+                        child: Text("Cancel"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    );
+                    showCupertinoModalPopup(
+                        context: context, builder: (context) => action);
+                  },
+            child: Text(logger.getName() == null
+                ? 'Unnamed Session'
+                : logger.getName()),
+          ),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,
