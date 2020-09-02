@@ -88,8 +88,8 @@ class _CalcPageState extends State<CalcPage> {
   }
 
   void getCalcLoggerStream() async {
-    calcLoggerStream =
-        databaser.getSavedCalcSessions(await PreferenceSaver.getUsersEmail());
+    calcLoggerStream = databaser
+        .getSavedCalcSessionsStream(await PreferenceSaver.getUsersEmail());
   }
 
   Widget calcSessionList() {
@@ -101,17 +101,35 @@ class _CalcPageState extends State<CalcPage> {
                 shrinkWrap: true,
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return Text(
-                    snapshot.data.documents[index].data['timeCreated']
-                        .toString(),
-                    style: TextStyle(
-                      fontSize: 25,
-                    ),
-                    textAlign: TextAlign.center,
+                  return Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            snapshot.data.documents[index].data['name']
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: 25,
+                            ),
+                            //textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(Icons.delete),
+                        ),
+                      ),
+                    ],
                   );
                 },
               )
-            : Container(child: Text("Failed"));
+            : CircularProgressIndicator();
       },
     );
   }
@@ -123,7 +141,12 @@ class _CalcPageState extends State<CalcPage> {
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white, //Color(0xff555555),
         drawer: Drawer(
-          child: calcSessionList(),
+          child: SingleChildScrollView(
+            child: Column(children: [
+              Container(),
+              calcSessionList(),
+            ]),
+          ),
         ),
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -161,6 +184,7 @@ class _CalcPageState extends State<CalcPage> {
                             content: Column(
                               children: [
                                 TextField(
+                                  maxLength: 13,
                                   controller: nameTextController,
                                   decoration: widgetProider
                                       .formInputdecoration('Session name'),

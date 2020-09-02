@@ -41,11 +41,12 @@ class Databaser {
     });
   }
 
-  Stream<QuerySnapshot> getSavedCalcSessions(String email) {
+  Stream<QuerySnapshot> getSavedCalcSessionsStream(String email) {
     return Firestore.instance
         .collection("users")
         .document(email)
         .collection("calcSessions")
+        .orderBy('timeCreated', descending: true)
         .snapshots();
     //.getDocuments()
     //.asStream();
