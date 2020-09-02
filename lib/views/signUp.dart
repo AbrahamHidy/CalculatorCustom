@@ -33,16 +33,16 @@ class _SignUpState extends State<SignUp> {
         isLoading = true;
       });
 
-      Map<String, String> userInfoMap = {
+      /*Map<String, String> userInfoMap = {
         "email": emailTextControl.text.trim(),
-      };
+      };*/
 
       authorizor
           .signUpEmailPass(
               emailTextControl.text.trim(), passwordTextControl.text.trim())
           .then((value) {
         if (value != null) {
-          databaser.uploadUserInfo(userInfoMap);
+          databaser.uploadUserInfo(emailTextControl.text.trim());
           PreferenceSaver.saveLoggedIn(true);
           PreferenceSaver.saveUsersEmail(emailTextControl.text.trim());
 

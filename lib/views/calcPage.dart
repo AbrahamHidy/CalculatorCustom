@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:calculator_custom/helpers/functionProvider.dart';
 import 'package:calculator_custom/helpers/numberFormatter.dart';
 import 'package:calculator_custom/models/calcLogger.dart';
 import 'package:calculator_custom/models/calculation.dart';
@@ -20,8 +21,8 @@ class _CalcPageState extends State<CalcPage> {
   ContextModel contextModel = new ContextModel();
 
   Databaser databaser = new Databaser();
-
   CalcLogger logger;
+  Stream calcLoggerStream;
 
   String calculation = '';
   String userInput = '';
@@ -78,7 +79,37 @@ class _CalcPageState extends State<CalcPage> {
   @override
   void initState() {
     logger = new CalcLogger(notifyParent: refresh);
+    getCalcLoggerStream();
     super.initState();
+  }
+
+  void getCalcLoggerStream() async {
+    calcLoggerStream =
+        databaser.getSavedCalcSessions(await PreferenceSaver.getUsersEmail());
+  }
+
+  Widget calcSessionList() {
+    return StreamBuilder(
+      stream: calcLoggerStream,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) {
+                  return Text(
+                    snapshot.data.documents[index].data['timeCreated']
+                        .toString(),
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
+                    textAlign: TextAlign.center,
+                  );
+                },
+              )
+            : Container(child: Text("Failed"));
+      },
+    );
   }
 
   @override
@@ -88,20 +119,7 @@ class _CalcPageState extends State<CalcPage> {
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white, //Color(0xff555555),
         drawer: Drawer(
-          child: ListView(
-            children: [
-              ListTile(
-                title: Text(
-                  "Saved Calculations",
-                  style: TextStyle(fontSize: 30, color: Colors.blue),
-                ),
-                focusColor: Colors.blue,
-              ),
-              DrawerItem(),
-              DrawerItem(),
-              DrawerItem(),
-            ],
-          ),
+          child: calcSessionList(),
         ),
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -129,16 +147,13 @@ class _CalcPageState extends State<CalcPage> {
           ],
           iconTheme: IconThemeData(color: Colors.black),
           centerTitle: true,
-          title: GestureDetector(
-            onTap: () {
-              databaser.uploadCalculation(logger);
-            },
-            child: Text(
-              'Cloud Calc',
-              style: TextStyle(
-                  color: Colors.black, fontSize: 28, letterSpacing: 3),
-            ),
-          ),
+          title: DropdownButton(items: [
+            DropdownMenuItem(
+              child: GestureDetector(
+                  onTap: () => databaser.uploadCalculation(logger),
+                  child: Text('Upload')),
+            )
+          ], onChanged: null),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,

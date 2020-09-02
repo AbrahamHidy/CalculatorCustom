@@ -1,7 +1,10 @@
+import 'package:calculator_custom/helpers/functionProvider.dart';
 import 'package:calculator_custom/models/calcLogger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Databaser {
+  PreferenceSaver preferenceSaver = new PreferenceSaver();
+
   getUserWithUsername(String username) async {
     return await Firestore.instance
         .collection("users")
@@ -16,24 +19,35 @@ class Databaser {
         .getDocuments();
   }
 
-  uploadUserInfo(userMap) {
-    Firestore.instance
-        .collection("users")
-        .add(userMap)
-        .catchError((e) => print(e.toString()));
-  }
+  uploadUserInfo(String email) {}
 
   uploadCalculation(CalcLogger logger) {
-    if (logger.getId() != null) {
-      Firestore.instance
-          .collection("calcSessions")
-          .document(logger.getId())
-          .setData(logger.toMap());
-    } else {
-      Firestore.instance
-          .collection("calcSessions")
-          .document()
-          .setData(logger.toMap());
-    }
+    PreferenceSaver.getUsersEmail().then((email) {
+      if (logger.getId() != null) {
+        Firestore.instance
+            .collection("users")
+            .document(email)
+            .collection("calcSessions")
+            .document(logger.getId())
+            .setData(logger.toMap());
+      } else {
+        Firestore.instance
+            .collection("users")
+            .document(email)
+            .collection("calcSessions")
+            .document()
+            .setData(logger.toMap());
+      }
+    });
+  }
+
+  Stream<QuerySnapshot> getSavedCalcSessions(String email) {
+    return Firestore.instance
+        .collection("users")
+        .document(email)
+        .collection("calcSessions")
+        .snapshots();
+    //.getDocuments()
+    //.asStream();
   }
 }
