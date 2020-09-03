@@ -27,7 +27,7 @@ class _CalcPageState extends State<CalcPage> {
   CalcLogger logger;
   Stream calcLoggerStream;
 
-  String calculation = '';
+  String displayText = '';
   String userInput = '';
   bool calculated = false;
   WidgetProider widgetProider = new WidgetProider();
@@ -41,18 +41,21 @@ class _CalcPageState extends State<CalcPage> {
       borderRadius: BorderRadius.all(Radius.circular(100)),
       onTap: () {
         if (lable == 'Save') {
-          logger.saveCalculation(Calculation(calculation, userInput));
+          if (calculated) {
+            logger.saveCalculation(Calculation(displayText, userInput));
+            calculated = false;
+          }
         } else if (lable == "Clear") {
-          calculation = '';
+          displayText = '';
           userInput = '';
           calculated = false;
         } else if (lable == '=') {
           expression = parser
-              .parse(calculation.replaceAll('(', "*(").replaceAll(')', ')'));
-          userInput = calculation;
+              .parse(displayText.replaceAll('(', "*(").replaceAll(')', ')'));
+          userInput = displayText;
           double result =
               expression.evaluate(EvaluationType.REAL, contextModel);
-          calculation = NumberFormatter.format(result);
+          displayText = NumberFormatter.format(result);
           calculated = true;
         } else if (lable == '1' ||
             lable == '2' ||
@@ -66,12 +69,12 @@ class _CalcPageState extends State<CalcPage> {
             lable == '0' ||
             lable == '.') {
           if (calculated) {
-            calculation = '';
+            displayText = '';
             calculated = false;
           }
-          calculation += lable;
+          displayText += lable;
         } else {
-          calculation += lable;
+          displayText += lable;
           calculated = false;
         }
         setState(() {});
@@ -90,6 +93,7 @@ class _CalcPageState extends State<CalcPage> {
   void getCalcLoggerStream() async {
     calcLoggerStream = databaser
         .getSavedCalcSessionsStream(await PreferenceSaver.getUsersEmail());
+    setState(() {});
   }
 
   Widget calcSessionList() {
@@ -103,18 +107,28 @@ class _CalcPageState extends State<CalcPage> {
                 itemBuilder: (context, index) {
                   return Stack(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            snapshot.data.documents[index].data['name']
-                                .toString(),
-                            style: TextStyle(
-                              fontSize: 25,
+                      GestureDetector(
+                        onTap: () {
+                          logger = new CalcLogger(notifyParent: refresh);
+                          logger
+                              .setID(snapshot.data.documents[index].documentID);
+                          logger.fromMap(snapshot.data.documents[index].data);
+                          Navigator.pop(context);
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              snapshot.data.documents[index].data['name']
+                                  .toString(),
+                              style: TextStyle(
+                                fontSize: 25,
+                              ),
+                              //textAlign: TextAlign.center,
                             ),
-                            //textAlign: TextAlign.center,
                           ),
                         ),
                       ),
@@ -122,7 +136,41 @@ class _CalcPageState extends State<CalcPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: Icon(Icons.delete),
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: Column(
+                                        children: [
+                                          Text("Delete calc session?"),
+                                          InkResponse(
+                                            onTap: () {
+                                              databaser.deleteCalculation(
+                                                  snapshot.data.documents[index]
+                                                      .documentID);
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: CircleAvatar(
+                                              child: Icon(Icons.delete_forever),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 5),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -141,12 +189,14 @@ class _CalcPageState extends State<CalcPage> {
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white, //Color(0xff555555),
         drawer: Drawer(
-          child: SingleChildScrollView(
-            child: Column(children: [
-              Container(),
-              calcSessionList(),
-            ]),
-          ),
+          child: Column(children: [
+            DrawerHeader(
+              child: Text('Test Header'),
+            ),
+            Expanded(
+              child: calcSessionList(),
+            ),
+          ]),
         ),
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -199,8 +249,11 @@ class _CalcPageState extends State<CalcPage> {
                                     setState(() {});
                                   },
                                   child: CircleAvatar(
-                                    child: Icon(Icons.close),
-                                    backgroundColor: Colors.red,
+                                    child: Icon(
+                                      Icons.check,
+                                      size: 30,
+                                    ),
+                                    backgroundColor: Colors.green,
                                   ),
                                 ),
                               ],
@@ -233,7 +286,7 @@ class _CalcPageState extends State<CalcPage> {
                           },
                         ),
                         CupertinoActionSheetAction(
-                          child: Text("Delete session"),
+                          child: Text("Clear session"),
                           isDestructiveAction: true,
                           onPressed: () {
                             Navigator.pop(context);
@@ -280,7 +333,7 @@ class _CalcPageState extends State<CalcPage> {
               padding: EdgeInsets.symmetric(horizontal: 16),
               //height: 45,
               child: AutoSizeText(
-                calculation,
+                displayText,
                 maxLines: 1,
                 //maxFontSize: 40,
                 style: TextStyle(

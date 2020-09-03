@@ -58,6 +58,10 @@ class CalcLogger {
     _name = name;
   }
 
+  void setID(String id) {
+    _id = id;
+  }
+
   int getLength() {
     return _savedCalcTiles.length;
   }
@@ -75,14 +79,27 @@ class CalcLogger {
     List<Map<String, dynamic>> calcArr = [];
     for (int i = 0; i < _calcsForReference.length; i++) {
       Map<String, dynamic> calculationMap = {
-        "result $i": _calcsForReference[i].getResult(),
-        "expression $i": _calcsForReference[i].getExpression(),
-        "timeCreated $i": _calcsForReference[i].timeCreated,
+        "result": _calcsForReference[i].getResult(),
+        "expression": _calcsForReference[i].getExpression(),
+        "timeCreated": _calcsForReference[i].timeCreated,
       };
       calcArr.add(calculationMap);
     }
     toRet.addAll({"calculations": calcArr});
     return toRet;
+  }
+
+  void fromMap(Map<String, dynamic> loggerMap) {
+    _name = loggerMap["name"];
+    _id = loggerMap["id"];
+    timeCreated = new DateTime.fromMillisecondsSinceEpoch(
+        loggerMap["timeCreated"].millisecondsSinceEpoch);
+    for (int i = 0; i < loggerMap["calculations"].length; i++) {
+      Calculation calc = new Calculation(loggerMap["calculations"][i]["result"],
+          loggerMap["calculations"][i]["expression"]);
+      //calc.setCreationTime(loggerMap["calculations"][i]["timeCreated"]);  Need to convert the timestamp to a datetime.
+      saveCalculation(calc);
+    }
   }
 
   String getName() {
@@ -92,6 +109,4 @@ class CalcLogger {
   String getId() {
     return _id;
   }
-
-  void deleteCalculation() {}
 }

@@ -41,6 +41,17 @@ class Databaser {
     });
   }
 
+  deleteCalculation(String id) {
+    PreferenceSaver.getUsersEmail().then((email) {
+      Firestore.instance
+          .collection("users")
+          .document(email)
+          .collection("calcSessions")
+          .document(id)
+          .delete();
+    });
+  }
+
   Stream<QuerySnapshot> getSavedCalcSessionsStream(String email) {
     return Firestore.instance
         .collection("users")

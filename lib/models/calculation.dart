@@ -17,4 +17,8 @@ class Calculation {
   String getExpression() {
     return this._expression;
   }
+
+  void setCreationTime(DateTime timeFromDatabase) {
+    timeCreated = timeFromDatabase;
+  }
 }
