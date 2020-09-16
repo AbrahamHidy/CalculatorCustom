@@ -315,14 +315,26 @@ class _CalcPageState extends State<CalcPage> {
                         style: TextStyle(fontSize: 15.0),
                       ),
                       actions: <Widget>[
-                        CupertinoActionSheetAction(
-                          child: Text("Upload to cloud"),
-                          isDefaultAction: true,
-                          onPressed: () {
-                            databaser.uploadCalculation(logger);
-                            Navigator.pop(context);
-                          },
-                        ),
+                        usersEmail == null
+                            ? CupertinoActionSheetAction(
+                                child: Text("Log in"),
+                                isDefaultAction: true,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AccountScreen()));
+                                },
+                              )
+                            : CupertinoActionSheetAction(
+                                child: Text("Upload to cloud"),
+                                isDefaultAction: true,
+                                onPressed: () {
+                                  databaser.uploadCalculation(logger);
+                                  Navigator.pop(context);
+                                },
+                              ),
                         CupertinoActionSheetAction(
                           child: Text("Clear session"),
                           isDestructiveAction: true,
