@@ -24,7 +24,7 @@ class _SignOutState extends State<SignOut> {
       if (value != null) {
         usersEmail = value;
       } else {
-        usersEmail = 'null';
+        usersEmail = null;
       }
     });
 
@@ -61,6 +61,7 @@ class _SignOutState extends State<SignOut> {
             GestureDetector(
               onTap: () => authorizor.signOut().then((value) {
                 PreferenceSaver.saveLoggedIn(false);
+                PreferenceSaver.reset();
 
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => CalcPage()));

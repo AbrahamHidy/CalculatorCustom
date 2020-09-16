@@ -22,15 +22,17 @@ class _CalcPageState extends State<CalcPage> {
   Expression expression;
   ContextModel contextModel = new ContextModel();
   TextEditingController nameTextController = new TextEditingController();
+  WidgetProider widgetProider = new WidgetProider();
 
   Databaser databaser = new Databaser();
   CalcLogger logger;
   Stream calcLoggerStream;
+  String usersEmail = '';
 
   String displayText = '';
   String userInput = '';
   bool calculated = false;
-  WidgetProider widgetProider = new WidgetProider();
+  WidgetProider widgetProvider = new WidgetProider();
 
   refresh() {
     setState(() {});
@@ -83,9 +85,22 @@ class _CalcPageState extends State<CalcPage> {
     );
   }
 
+  void getUserEmail() async {
+    await PreferenceSaver.getUsersEmail().then((value) {
+      if (value != null) {
+        usersEmail = value;
+      } else {
+        usersEmail = null;
+      }
+    });
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     logger = new CalcLogger(notifyParent: refresh);
+    getUserEmail();
     getCalcLoggerStream();
     super.initState();
   }
@@ -191,7 +206,30 @@ class _CalcPageState extends State<CalcPage> {
         drawer: Drawer(
           child: Column(children: [
             DrawerHeader(
-              child: Text('Test Header'),
+              child: usersEmail == null || usersEmail == ""
+                  ? InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AccountScreen()));
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        width: MediaQuery.of(context).size.width -
+                            MediaQuery.of(context).size.width / 3,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Text(
+                          'Log in!',
+                          style: widgetProvider.buttonTextStyle(),
+                        ),
+                      ),
+                    )
+                  : Text(usersEmail),
             ),
             Expanded(
               child: calcSessionList(),
